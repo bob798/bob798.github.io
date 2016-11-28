@@ -1,33 +1,37 @@
-# Site settings
-email: 
-baseurl: ""
-paginate: 5
-paginate_path: "/blog/page-:num"
-google_analytics: 
-
-# SEO settings
-title: Trophy
-description: 
-url: ""
-twitter_username: 
-default_img: 
-
-# Profile settings
-name: 
-profile_img: 
-profile: 
-social:
-  github: 
-
-# Build settings
-include: ["_categories"]
-exclude: ["_screenshots", "Gemfile", "Gemfile.lock"]
+permalink: /blog/:year/:month/:title.html 
+include: ['.htaccess']
+exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md", "CNAME", "Gemfile", "Gemfile.lock"]
 markdown: kramdown
-permalink: /:year/:month/:day/:title/
+highlights: pygments
+url: 
+cdn_url: 7u2t01.com1.z0.glb.clouddn.com
+lsi: false
+safe: true
+timezone: Asia/Shanghai
+auto: false 
 
-# Sass
-sass:
-  style: compressed
+paginate: 8
+paginate_path: "page:num"
 
-# Gems
-gems: [jekyll-paginate, jekyll-sitemap, octopress-autoprefixer]
+kramdown:
+  auto_ids: true,
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  use_coderay: false
+
+JB :
+  IMAGE_PATH : http://coolshell.info/images
+
+# presonal config
+domain: http://coolshell.info
+title: Richun
+description: Draw my life with code
+author: Bob Liu
+email: xbb798@gmail.com
+github: Richun
+
+config:
+  js_dir:
+  img_dir:
+  css_dir:

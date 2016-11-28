@@ -1,60 +1,79 @@
----
-layout: default
----
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+--- 
+layout: default 
+--- 
+<!-- Blog Post -->
+<!-- Title -->
+<div class="row">
+  <div class="post-area post">
 
-  <header class="section-padding--lg mast">
-    <a class="nav nav--white" href="{{ site.baseurl }}/">
-      <i class="fa fa-lg fa-arrow-left"></i>
-      <span>Back to Posts</span>
-    </a>
-    <figure class="absolute-bg mast__img" style="background-image: url('{{ page.image }}');"></figure>
-    <div class="mast__container">
-      <span><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time></span>
-      <h1 itemprop="name headline">{{ page.title }}</h1>
-      {% if page.categories.size > 0 %}
-        <span>
-          Posted in {{ page.categories | join: ', ' }}
-        </span>
-      {% endif %}
-      <span></span>
-    </div>
-  </header>
-
-  <section class="section-padding post" itemprop="articleBody">
-    {{ content }}
-  </section>
-
-  <section class="profile">
-    <div class="profile__card">
-      <div class="profile__img">
-        <figure class="absolute-bg" style="background-image: url('{{ site.profile_img }}');"></figure>
-      </div>
-      <div class="profile__container">
-        <p>{{ site.profile }}</p>
-        {% if site.email or site.social %}
-          <ul class="profile__social">
-            {% if site.email %}
-              <li><a class="fa fa-lg fa-envelope-o" href="mailto:{{ site.email }}"></a></li>
-            {% endif %}
-            {% for social in site.social %}
-              <li><a class="fa fa-lg fa-{{ social[0] }}" href="{{ social[1] }}" target="_blank"></a></li>
+ 	<div class="post-list-body">
+        	<div class="all-posts" post-cate="All">
+ 		<header>
+		<h1>
+		  {{ page.title }}
+		  <div class="post-date"><a href="https://github.com/{{ site.github }}/{{ site.github }}.github.io/edit/master/{{ page.path }}" target="_blank">纠错</a>&nbsp;&nbsp;
+			<span class="glyphicon glyphicon-time"></span>
+			{{ page.date | date_to_string }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}
+		  </div>
+		</h1>
+ 		</header>
+		<!-- Author -->
+		<hr>
+		 <article>
+		{{ content }}
+		  </article>
+		<hr>
+	<br/>
+        <p>
+          本作品由 <a href="mailto:{{ site.email }}">{{ site.author }}</a> 创作，采用
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="查看协议详细信息" target="_blank">CC BY-NC-SA 3.0 许可协议</a>
+          进行许可。
+        </p>
+	<div style="margin-top:10px;margin-bottom:10px">
+	  {%if page.previous%}
+	  <span class="next">
+	    上篇：
+	    <a href="{{page.previous.url}}">
+	      {{page.previous.title}}
+	    </a>
+	  </span>
+	  {%endif%} 
+	  {%if page.next%}
+	  <span class="prev">
+	    下篇：
+	    <a href="{{page.next.url}}">
+	      {{page.next.title}}
+	    </a>
+	  </span>
+	  {%endif%}
+	</div>
+	</div>
+	
+        {% for category in site.categories %}
+	<div post-cate="{{category | first}}">
+          <ul class="posts">
+            {% for posts in category  %}
+              {% for post in posts %}
+                {% if post.url %}
+		<li>
+                  <a href="{{ post.url }}" class="post-list-item">
+                    <h2>{{ post.title }}</h2>
+                    <span class="date">{{ post.date | date: "%b %-d, %Y" }}</span>
+                  </a>
+		</li>
+                {% endif %}
+              {% endfor %}
             {% endfor %}
           </ul>
-        {% endif %}
-      </div>
-    </div>
-  </section>
+	</div>
+        {% endfor %}
+	 </div>
 
-</article>
+</div>
 
-{% if page.previous.url %}
-  <section class="next">
-    <a class="next__link" href="{{page.previous.url | prepend: site.baseurl }}" style="background-image: url('{{ page.previous.image }}');">
-      <div class="next__container">
-        <span>Read Next</span>
-        <h2>{{page.previous.title}}</h2>
-      </div>
-    </a>
-  </section>
-{% endif %}
+
+<!-- Blog Comments -->
+<div class="media">
+  {% include comment.html %} 
+</div> 
+</div>

@@ -1,56 +1,79 @@
 ---
 layout: default
+title: "首页：Home"
 ---
-<section class="previews">
-  <div>
-    {% for post in paginator.posts %}
-      <figure class="absolute-bg preview__img" style="background-image: url('{{ post.image }}');"></figure>
-    {% endfor %}
-    <div class="previews__container">
-      <span>Welcome to</span>
-      <h1>{{ site.title }}</h1>
-    </div>
-  </div>
+<!-- 
+<h1 class="page-header">
+  <small>
+    {{ site.description }}
+  </small>
+</h1>
+-->
+<!-- Loop output paged posts -->
+<div id="index" class="row">
+    <div class="post-area">
+     	 <div class="post-list-body">
+        <div post-cate="All">
+        <ul class="posts">
+	{% for post in paginator.posts %}
+	<li>	
+	<h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+	<span class="date">{{ post.date | date_to_string }}</span>
+	
+	<hr>
+	<p>{% if post.excerpt.size > 32 %}{{ post.excerpt }}{% else %}{{ post.content | strip_html | strip_newlines | truncate: 160 }}{% endif %}</p>
+		<p> <a href="{{ post.url }}"><span >阅读全文 &raquo; </span></a></p>
+	<hr>
+	</li>
+	{% endfor %}
+	</ul>
+	<!-- Pager indicator -->
+	<ul class="pager">
+	  {% if paginator.previous_page %} {% if paginator.previous_page == 1 %}
+	  <li class="previous">
+	    <a href="{{ site.url }}/">
+	      &larr; Older
+	    </a>
+	  </li>
+	  {% else %}
+	  <li class="previous">
+	    <a href="{{ site.url }}/page{{ paginator.previous_page }}">
+	      &larr; Older
+	    </a>
+	  </li>
+	  {% endif %} {% endif %} {% if paginator.next_page %}
+	  <li class="next">
+	    <a href="{{ site.url }}/page{{ paginator.next_page }}">
+	      Newer &rarr;
+	    </a>
+	  </li>
+	  {% endif %}
+	</ul>
+	</div>
+	
 
-  <div>
-    <header>
-      <ul class="tabs">
-        <li class="tabs__item">Posts</li>
-        <li class="tabs__item">Categories</li>
-      </ul>
-    </header>
+	 
+       {% for category in site.categories %}
+	<div post-cate="{{category | first}}">
 
-    <div class="tab">
-      <ul itemscope itemtype="http://schema.org/Blog">
-        {% for post in paginator.posts %}
-          <li class="preview" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-            <a class="preview__link" href="{{ post.url | prepend: site.baseurl }}" itemprop="url">
-              <span class="preview__date" itemprop="datePublished" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</span>
-              <h2 class="preview__header" itemprop="name">{{ post.title }}</h2>
-              <p class="preview__excerpt" itemprop="description">{{ post.content | strip_html | truncatewords: 30 }}</p>
-              <span class="preview__more">Read More</span>
-            </a>
-          </li>
+          <ul class="posts">
+            {% for posts in category  %}
+              {% for post in posts %}
+                {% if post.url %}
+		<li>
+                  <a href="{{ post.url }}" class="post-list-item">
+                    <h2>{{ post.title }}</h2>
+                    <span class="date">{{ post.date | date: "%b %-d, %Y" }}</span>
+                  </a>
+		</li>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </ul>
+	</div>
         {% endfor %}
-      </ul>
+	
+	 </div>
 
-      {% if paginator.total_pages > 1 %}
-        <div class="pagination">
-          {% if paginator.previous_page %}
-            <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}">Previous</a>
-          {% endif %}
-
-          {% if paginator.next_page %}
-            <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Next</a>
-          {% endif %}
-        </div>
-      {% endif %}
-
-      {% include archive-link.html %}
-    </div>
-
-    {% include categories-tab.html %}
-
-  </div>
-
-</section>
+</div>
+</div>
