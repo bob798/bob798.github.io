@@ -7,6 +7,12 @@ description: "生活不止眼前的苟且，还有诗和远方的田野。"
 <!DOCTYPE html>
 <html>
 <head>
+<script src="../audiojs/audio.js"></script>
+<script>
+  audiojs.events.ready(function() {
+   audiojs.createAll();
+   });
+</script>
 <script src="http://simplewebrtc.com/latest.js"></script>
 
 <style>
@@ -19,7 +25,8 @@ description: "生活不止眼前的苟且，还有诗和远方的田野。"
 </style>
 </head>
 <body>
-
+<audio src="http://richun.github.io/audiojs/beyondmp3"
+       autoplay></audio>
 <video id="localVideo"></video>
 <div id="remoteVideos"></div>
 
