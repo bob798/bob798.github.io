@@ -1,37 +1,73 @@
-permalink: /blog/:year/:month/:title.html 
-include: ['.htaccess']
-exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md", "CNAME", "Gemfile", "Gemfile.lock"]
+# Site settings
+title: Microdust
+header-img: "img/autumn2.jpg"
+tagline: "吉光片羽"  
+description: "生活不止眼前的苟且，还有诗和远方的田野。"  
+baseurl: ""
+url: "http://richun.github.io"  
+#url: "http://localhost:4000"
+
+# About/contact
+owner: 
+  name: "Bob"
+  email: xbb798@gmail.com
+  bio: "简洁不简单"
+
+# Data
+gavatar: http://dreamofbook.qiniudn.com/Az..png
+favicon: img/favicon.ico
+
+twitter_username: Azeril_Lapland  
+github_username: Azeril  
+facebook_username: Azeril_Lapland  
+weibo_username: Azeril  
+zhihu_username: Azeril  
+
+# Build settings  
+# use Github Flavored Markdown !important  
+# document: http://jekyllrb.com/docs/configuration/#kramdown  
 markdown: kramdown
-highlights: pygments
-url: 
-cdn_url: 7u2t01.com1.z0.glb.clouddn.com
-lsi: false
-safe: true
-timezone: Asia/Shanghai
-auto: false 
-
-paginate: 8
-paginate_path: "page:num"
-
 kramdown:
-  auto_ids: true,
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
-  enable_coderay: false
+  input: GFM
+highlighter: rouge
 
-JB :
-  IMAGE_PATH : http://coolshell.info/images
+gems: 
+- jekyll-gallery-generator
+- jekyll-paginate
+permalink: none
+paginate: 8
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 
-# presonal config
-domain: http://coolshell.info
-title: Richun
-description: Draw my life with code
-author: Bob Liu
-email: xbb798@gmail.com
-github: Richun
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone: Asia/Shanghai
 
-config:
-  js_dir:
-  img_dir:
-  css_dir:
+# Title
+
+
+# Defaults for posts
+defaults:
+  -
+    scope: 
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Azeril"
+      header-img: "img/fantasy.jpg" # We don't want posts without a header image, that whould mean white on white
+
+
+# Comments 
+comments :
+  provider : duoshuo
+  duoshuo :
+    short_name : Azeril
+  disqus :
+      short_name : Azeril
+
+# Analytics and webmaster tools stuff goes here
+google_analytics: UA-66863061-1
+google_verify:
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:
+
+# Links to include in footer navigation
