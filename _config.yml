@@ -1,5 +1,5 @@
 # Site settings
-title: Microdust
+title: Bob
 header-img: "img/autumn2.jpg"
 tagline: "吉光片羽"  
 description: "生活不止眼前的苟且，还有诗和远方的田野。"  
@@ -17,11 +17,11 @@ owner:
 gavatar: http://dreamofbook.qiniudn.com/Az..png
 favicon: img/favicon.ico
 
-twitter_username: Azeril_Lapland  
-github_username: Azeril  
-facebook_username: Azeril_Lapland  
-weibo_username: Azeril  
-zhihu_username: Azeril  
+#twitter_username: Azeril_Lapland  
+#github_username: Azeril  
+#facebook_username: Azeril_Lapland  
+#weibo_username: Azeril  
+#zhihu_username: Azeril  
 
 # Build settings  
 # use Github Flavored Markdown !important  
@@ -60,12 +60,12 @@ defaults:
 comments :
   provider : duoshuo
   duoshuo :
-    short_name : Azeril
+    short_name : Bob
   disqus :
-      short_name : Azeril
+      short_name : Bob
 
 # Analytics and webmaster tools stuff goes here
-google_analytics: UA-66863061-1
+#google_analytics: UA-66863061-1
 google_verify:
 # https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
 bing_verify:
