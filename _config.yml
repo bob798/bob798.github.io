@@ -1,5 +1,5 @@
 # Site settings
-title: Bob
+title: BoB
 header-img: "img/autumn2.jpg"
 tagline: "吉光片羽"  
 description: "生活不止眼前的苟且，还有诗和远方的田野。"  
@@ -52,7 +52,7 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-      author: "Azeril"
+      author: "BoB"
       header-img: "img/fantasy.jpg" # We don't want posts without a header image, that whould mean white on white
 
 
@@ -60,9 +60,9 @@ defaults:
 comments :
   provider : duoshuo
   duoshuo :
-    short_name : Bob
+    short_name : BoB
   disqus :
-      short_name : Bob
+      short_name : BoB
 
 # Analytics and webmaster tools stuff goes here
 #google_analytics: UA-66863061-1
