@@ -1,10 +1,10 @@
 ---
 layout: post
 categories: life
-title: docker 部署mysql
+title: Docker 部署 Mysql
 date: 2016-12-02 04:13:49 +0800
 description:docker 部署mysql
-keywords: description
+keywords:docker mysql
 ---
 
 ---
