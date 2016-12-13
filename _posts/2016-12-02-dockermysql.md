@@ -1,7 +1,7 @@
 ---
 layout: post
 categories: blog
-title: docker 部署 mysql
+title: Docker 部署 Mysql
 date: 2016-12-03 17:43:54 +0800
 description: docker mysql
 keywords: docker mysql
