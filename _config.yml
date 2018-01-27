@@ -3,7 +3,7 @@
 # ---------------- #
 baseurl:
 #url: http://mazhuang.org
-url: http://richun.github.io
+url: https://richun.github.io
 date_format: "ordinal"
 title: 码志
 subtitle: "打码改变人生"
