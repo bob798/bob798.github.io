@@ -5,10 +5,10 @@ baseurl:
 #url: http://mazhuang.org
 url: https://richun.github.io
 date_format: "ordinal"
-title: 码志
-subtitle: "打码改变人生"
-description: "马壮的个人博客"
-keywords: 码志, Zhuang Ma, mzlogin, mazhuang
+title: Bob
+subtitle: "Fail Better"
+description: "Bob的个人博客"
+keywords: Bob
 timezone: Asia/Shanghai
 encoding: "utf-8"
 side_bar_repo_limit: 5
@@ -16,12 +16,12 @@ side_bar_repo_limit: 5
 # ---------------- #
 #      Author      #
 # ---------------- #
-author: Zhuang Ma
-organization: zkh360.com
-organization_url: http://www.zkh360.com
-github_username: mzlogin
-location: Wuhan, China
-email: chumpma@gmail.com
+author: Bob
+organization: ecloudsign.com
+organization_url: http://www.ecloudsign.com
+github_username: richun
+location: BeiJing, China
+email: xbb798@gmail.com
 
 # ---------------- #
 #    Navigation    #
