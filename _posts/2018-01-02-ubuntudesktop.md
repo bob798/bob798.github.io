@@ -1,12 +1,10 @@
-﻿# Ubuntu17.04  美化桌面
-
----
+﻿---
 layout: post
 categories: ubuntu
-title: ubuntu17.04  桌面美化
+title: ubuntu17.04 桌面美化篇
 date: 2018-01-02 04:13:49 +0800
-description: ubuntu17.04 桌面美化
-keywords: ubuntu17.04 desktop 桌面美化 gnome
+description: ubuntu17.04 desktop
+keywords: ubuntu17.04 desktop  gnome
 ---
 
 最近将开发环境换到了Ubuntu,感觉特别的爽.
@@ -15,13 +13,13 @@ keywords: ubuntu17.04 desktop 桌面美化 gnome
 >本人安装的是Ubuntu17.04,建议新手不要安装最新的测试版.
 以后会持续更新Ubuntu系统相关内容.
 
-## 1. 桌面
+### 1. 桌面
  安装gnome
 ```Linux
 sudo apt install gnome-shell Ubuntu-gnome-desktop
 ```
 
-美化工具
+### 2. 美化工具
 chrom-gnome-shell
 ```Linux
 sudo apt install chrome-gnome-shell gnome-tweak-tool
