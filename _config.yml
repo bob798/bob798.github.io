@@ -18,7 +18,7 @@ side_bar_repo_limit: 5
 # ---------------- #
 author: Bob
 organization: ecloudsign.com
-organization_url: http://www.ecloudsign.com
+organization_url: https://www.ecloudsign.com
 github_username: bob798
 location: BeiJing, China
 email: xbb798@gmail.com
@@ -88,8 +88,8 @@ comments_provider: gitalk
 # !!!重要!!! 请修改下面这些信息为你自己申请的
 # !!!Important!!! Please modify infos below to yours
 # https://disqus.com
-disqus:
-    username: 
+#disqus:
+#    username: 
 # https://imsun.net/posts/gitment-introduction/
 # https://github.com/gitalk/gitalk#install
 # 在使用其它评论组件时可点击显示 Disqus
