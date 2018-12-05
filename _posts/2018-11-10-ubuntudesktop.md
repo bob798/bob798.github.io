@@ -2,7 +2,7 @@
 layout: post
 categories: ubuntu
 title: ubuntu17.04 桌面美化篇
-date: 2018-01-02 04:13:49 +0800
+date: 2018-11-10 04:13:49 +0800
 description: ubuntu17.04 desktop
 keywords: ubuntu17.04 desktop  gnome
 ---
