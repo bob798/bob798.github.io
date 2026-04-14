@@ -1,15 +1,44 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 
+const explorerSortFn = (a: any, b: any) => {
+  if (a.isFolder && !b.isFolder) return -1
+  if (!a.isFolder && b.isFolder) return 1
+  if (!a.isFolder && !b.isFolder) {
+    return b.displayName.localeCompare(a.displayName, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    })
+  }
+  return a.displayName.localeCompare(b.displayName, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  })
+}
+
 // components shared across all pages
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [],
+  afterBody: [
+    Component.Comments({
+      provider: "giscus",
+      options: {
+        repo: "bob798/bob798.github.io",
+        repoId: "MDEwOlJlcG9zaXRvcnk3NDc0OTY2OA==",
+        category: "General",
+        categoryId: "DIC_kwDOBHSW5M4C6y1G",
+        mapping: "pathname",
+        strict: false,
+        reactionsEnabled: true,
+        inputPosition: "bottom",
+      },
+    }),
+  ],
   footer: Component.Footer({
     links: {
       GitHub: "https://github.com/bob798",
-      "Speakeasy": "https://github.com/bob798/speakeasy",
+      Speakeasy: "https://github.com/bob798/speakeasy",
       "AI Handbook": "https://github.com/bob798/ai-handbook",
     },
   }),
@@ -41,22 +70,7 @@ export const defaultContentPageLayout: PageLayout = {
     }),
     Component.Explorer({
       folderDefaultState: "open",
-      sortFn: (a, b) => {
-        // folders first
-        if (a.isFolder && !b.isFolder) return -1
-        if (!a.isFolder && b.isFolder) return 1
-        // files: reverse alphabetical (date-prefixed filenames → newest first)
-        if (!a.isFolder && !b.isFolder) {
-          return b.displayName.localeCompare(a.displayName, undefined, {
-            numeric: true,
-            sensitivity: "base",
-          })
-        }
-        return a.displayName.localeCompare(b.displayName, undefined, {
-          numeric: true,
-          sensitivity: "base",
-        })
-      },
+      sortFn: explorerSortFn,
     }),
   ],
   right: [
@@ -66,7 +80,7 @@ export const defaultContentPageLayout: PageLayout = {
   ],
 }
 
-// components for pages that display lists of pages  (e.g. tags or folders)
+// components for pages that display lists of pages (e.g. tags or folders)
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
   left: [
@@ -83,20 +97,7 @@ export const defaultListPageLayout: PageLayout = {
     }),
     Component.Explorer({
       folderDefaultState: "open",
-      sortFn: (a, b) => {
-        if (a.isFolder && !b.isFolder) return -1
-        if (!a.isFolder && b.isFolder) return 1
-        if (!a.isFolder && !b.isFolder) {
-          return b.displayName.localeCompare(a.displayName, undefined, {
-            numeric: true,
-            sensitivity: "base",
-          })
-        }
-        return a.displayName.localeCompare(b.displayName, undefined, {
-          numeric: true,
-          sensitivity: "base",
-        })
-      },
+      sortFn: explorerSortFn,
     }),
   ],
   right: [],

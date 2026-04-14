@@ -1,3 +1,43 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// Monochrome Minimal Theme Overrides
+
+// Tighter content width for readability
+.page > #quartz-body .center {
+  max-width: 720px;
+}
+
+// Softer headings
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+// Clean internal links
+a.internal {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+// Subtle footer
+footer {
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
+
+// Cleaner code blocks
+pre {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+}
+
+// Softer blockquotes
+blockquote {
+  border-left: 3px solid var(--gray);
+  opacity: 0.85;
+}
+
+// Tag pills
+.tag-link {
+  font-size: 0.8rem;
+}
