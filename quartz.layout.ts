@@ -2,14 +2,18 @@ import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 
 const explorerSortFn = (a: any, b: any) => {
+  // folders first
   if (a.isFolder && !b.isFolder) return -1
   if (!a.isFolder && b.isFolder) return 1
+  // files: sort by date descending (newest first)
   if (!a.isFolder && !b.isFolder) {
-    return b.displayName.localeCompare(a.displayName, undefined, {
-      numeric: true,
-      sensitivity: "base",
-    })
+    const aDate = a.data?.date ? new Date(a.data.date).getTime() : 0
+    const bDate = b.data?.date ? new Date(b.data.date).getTime() : 0
+    if (aDate || bDate) return bDate - aDate
+    // fallback: reverse slug order (date-prefixed filenames)
+    return b.slugSegment.localeCompare(a.slugSegment, undefined, { numeric: true })
   }
+  // folders: alphabetical
   return a.displayName.localeCompare(b.displayName, undefined, {
     numeric: true,
     sensitivity: "base",
