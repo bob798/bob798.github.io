@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  repository_dispatch:
+    types: [handbook-updated]
 
 permissions:
   contents: read
@@ -21,13 +23,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Checkout ai-handbook
+        uses: actions/checkout@v4
+        with:
+          repository: bob798/ai-handbook
+          path: _handbook
+          fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Sync handbook markdown (pre-build)
+        run: bash ./scripts/sync-handbook.sh _handbook
+
       - name: Build Quartz
         run: npx quartz build
+
+      - name: Sync handbook HTML (post-build)
+        run: bash ./scripts/sync-handbook.sh --html _handbook
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

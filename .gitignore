@@ -7,5 +7,6 @@ tsconfig.tsbuildinfo
 .obsidian
 .quartz-cache
 private/
+content/ai-handbook/
 .replit
 replit.nix

@@ -42,6 +42,28 @@ GitHub Actions 自动构建
 bob798.github.io 上线
 ```
 
+## AI Handbook 知识库同步
+
+博客自动集成 [ai-handbook](https://github.com/bob798/ai-handbook) 知识库内容。
+
+**同步机制**：
+- ai-handbook push → `repository_dispatch` → 博客自动重建
+- Markdown 文件注入 frontmatter 后由 Quartz 渲染
+- HTML 交互式笔记在构建后复制到 `public/`，作为静态页面直接访问
+
+**本地同步**：
+```bash
+# 全量同步（md + html）
+npm run sync-handbook
+
+# 分步构建（推荐）
+bash ./scripts/sync-handbook.sh          # pre-build: 同步 md
+npx quartz build                          # 构建
+bash ./scripts/sync-handbook.sh --html    # post-build: 复制 html
+```
+
+**CI 依赖**：ai-handbook repo 需配置 secret `BLOG_DISPATCH_TOKEN`（Fine-grained PAT，scope: bob798-blog Contents read/write）。
+
 ## 内容结构
 
 ```
