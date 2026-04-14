@@ -1,17 +1,17 @@
 - name: 码志
-  url: http://mazhuang.org
+  url: https://mazhuang.org
 
 - name: Connie 酱
   url: https://connie99.github.io
 
 - name: 只宁静不致远
-  url: http://zxning.github.io
+  url: https://zxning.github.io
 
-- name: Blog Something
-  url: http://chenxiaoyoyo.github.io
+- name: Speakeasy - AI 英语私教
+  url: https://github.com/bob798/speakeasy
 
-- name: 日新亭
-  url: http://www.fengerzh.com/
+- name: AI Handbook - AI 工程师知识手册
+  url: https://github.com/bob798/ai-handbook
 
-- name: 尧哥
-  url: http://www.shishuyao.com
+- name: oh-my-claudecode - 多智能体编排
+  url: https://github.com/Yeachan-Heo/oh-my-claudecode
