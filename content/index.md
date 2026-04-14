@@ -13,6 +13,10 @@ title: Bob's Digital Garden
 - [[posts/2026-04-12-claude-code-multi-agent-orchestration|Claude Code 多智能体编排实践]]
 - [[posts/2026-04-11-ai-job-matching-toolchain|AI 驱动的求职工具链]]
 
+## 知识库
+
+- [AI Handbook · AI 工程师知识手册](ai-handbook/) — MCP / Agent / RAG 完整学习路径，含交互式笔记
+
 ## 当前关注
 
 - **AI Agent** — 多智能体编排与协作

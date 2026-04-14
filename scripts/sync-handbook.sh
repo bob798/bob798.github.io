@@ -29,6 +29,9 @@ for arg in "$@"; do
   esac
 done
 
+# 转为绝对路径
+HANDBOOK="$(cd "$HANDBOOK" && pwd)"
+
 CONTENT_DEST="$BLOG_ROOT/content/ai-handbook"
 PUBLIC_DEST="$BLOG_ROOT/public/ai-handbook"
 
