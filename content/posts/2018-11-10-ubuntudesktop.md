@@ -2,7 +2,7 @@
 title: "ubuntu17.04 桌面美化篇"
 date: 2018-11-10
 description: "ubuntu17.04 desktop"
-tags: ["ubuntu", "title:", "ubuntu17.04", "桌面美化篇", "date:", "2018-11-10", "04:13:49", "+0800", "description:", "ubuntu17.04", "desktop", "keywords:", "ubuntu17.04", "desktop", "gnome"]
+tags: ["linux"]
 ---
 最近将开发环境换到了Ubuntu,感觉特别的爽.
 终于远离了windows烦人的弹窗,还能熟悉Linux的命令.

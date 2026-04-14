@@ -2,9 +2,9 @@
 title: "Docker 部署 Mysql"
 date: 2018-11-05
 description: "docker mysql"
-tags: ["blog", "title:", "Docker", "部署", "Mysql", "date:", "2018-11-05", "17:43:54", "+0800", "description:", "docker", "mysql", "keywords:", "docker", "mysql"]
+tags: ["devops"]
 ---
-#Docker 部署 Mysql
+# Docker 部署 Mysql
 
 > 这阶段微服务也是火的不要不要的，咱也要玩玩。
 
