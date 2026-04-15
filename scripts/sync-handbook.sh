@@ -63,6 +63,18 @@ get_date() {
   echo "$date"
 }
 
+# 从 HTML <title> 标签提取标题，fallback 到文件名
+extract_html_title() {
+  local file="$1"
+  local basename="$2"
+  local title
+  title=$(grep -m1 '<title>' "$file" | sed 's/.*<title>//' | sed 's/<\/title>.*//' | sed 's/["\]/\\&/g')
+  if [[ -z "$title" ]]; then
+    title=$(echo "$basename" | sed 's/\.html$//' | sed 's/^[0-9_-]*//' | sed 's/-/ /g' | sed 's/_/ /g')
+  fi
+  echo "$title"
+}
+
 # 根据路径生成 tags
 path_to_tags() {
   local relpath="$1"
@@ -115,6 +127,64 @@ FRONTMATTER
   cat "$src" >> "$dest"
 }
 
+# 为 HTML 文件生成 wrapper .md（iframe 嵌入），使其出现在左侧导航
+generate_html_wrappers() {
+  local wrapper_count=0
+  while IFS= read -r -d '' file; do
+    local relpath="${file#$HANDBOOK/}"
+
+    local basename
+    basename=$(basename "$file")
+    local title
+    title=$(extract_html_title "$file" "$basename")
+    local date
+    date=$(get_date "$file")
+    local tags
+    tags=$(path_to_tags "$relpath")
+
+    # wrapper md 路径：与 html 同名但扩展名为 .md
+    local md_relpath="${relpath%.html}.md"
+    local dest="$CONTENT_DEST/$md_relpath"
+
+    # 如果同名 .md 已经由 markdown 同步阶段写入，跳过
+    [[ -f "$dest" ]] && continue
+
+    mkdir -p "$(dirname "$dest")"
+    cat > "$dest" <<WRAPPER
+---
+title: "$title"
+date: $date
+tags: $tags
+---
+
+<style>
+.html-embed-container { position: relative; width: 100%; }
+.html-embed-container iframe { width: 100%; height: 85vh; border: none; border-radius: 8px; }
+.html-embed-fullscreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; background: #fff; }
+.html-embed-fullscreen iframe { height: 100vh; border-radius: 0; }
+.html-embed-controls { display: flex; gap: 8px; margin-bottom: 8px; }
+.html-embed-controls a, .html-embed-controls button { padding: 4px 12px; border: 1px solid #ddd; border-radius: 4px; background: #f8f8f8; cursor: pointer; font-size: 13px; text-decoration: none; color: inherit; }
+.html-embed-controls button:hover, .html-embed-controls a:hover { background: #eee; }
+</style>
+
+<div class="html-embed-controls">
+<a href="/ai-handbook/$relpath" target="_blank">↗ 新窗口打开</a>
+<button onclick="this.closest('.html-embed-controls').nextElementSibling.classList.toggle('html-embed-fullscreen')">⛶ 全屏</button>
+</div>
+<div class="html-embed-container">
+<iframe src="/ai-handbook/$relpath" loading="lazy"></iframe>
+</div>
+WRAPPER
+    wrapper_count=$((wrapper_count + 1))
+  done < <(find "$HANDBOOK" \
+    -type f -name "*.html" \
+    -not \( -path '*/.venv/*' -o -path '*/node_modules/*' -o -path '*/src/*' \
+            -o -path '*/.git/*' \) \
+    -print0)
+
+  echo "    生成 $wrapper_count 个 HTML wrapper md"
+}
+
 # ── 阶段 1: 同步 Markdown ─────────────────────────────
 
 sync_markdown() {
@@ -143,6 +213,9 @@ sync_markdown() {
             -o -path '*/.claude/*' -o -path '*/.git/*' -o -path '*/dist-info/*' \
             -o -path '*/__pycache__/*' -o -path '*/.omc/*' -o -path '*/dist/*' \) \
     -print0)
+
+  # 为 HTML 生成 wrapper md
+  generate_html_wrappers
 
   # 生成索引页
   generate_index
@@ -177,7 +250,9 @@ sync_html() {
 
 generate_index() {
   local INDEX="$CONTENT_DEST/index.md"
-  cat > "$INDEX" <<'EOF'
+
+  # ── 静态部分: 知识地图 ──
+  cat > "$INDEX" <<'HEADER'
 ---
 title: "AI Handbook · AI 工程师知识手册"
 date: 2026-04-14
@@ -227,43 +302,56 @@ tags: ["ai-handbook"]
 
 ---
 
-## 交互式笔记 (HTML)
+## 交互式笔记
 
-> 这些是独立的交互式页面，点击后在新窗口打开。
+> 嵌入式交互页面，可在博客内直接查看，也可新窗口打开。
 
-### MCP 交互笔记
-- [MCP 深挖 · 11 问](/ai-handbook/mcp/interactive/mcp_11q.html){target="_blank"}
-- [MCP 机制追问 · 5 问](/ai-handbook/mcp/interactive/mcp_5q.html){target="_blank"}
+HEADER
 
-### Agent 交互笔记
-- [Agent 5D 知识地图](/ai-handbook/agent/agent-5d-v3.html){target="_blank"}
-- [Planning & Reasoning 5D](/ai-handbook/agent/planning-reasoning-5d-v4.html){target="_blank"}
-- [Agent 生态 2026 交互版](/ai-handbook/agent-research/research/agent-ecosystem-2026.html){target="_blank"}
-- [MemGPT/Letta 指南](/ai-handbook/agent-research/deep-dives/memgpt-letta/memgpt-letta-guide.html){target="_blank"}
+  # ── 动态部分: 自动扫描 HTML 生成交互笔记列表 ──
+  # 目录名 → 显示名映射
+  local current_section=""
+  while IFS= read -r -d '' file; do
+    local relpath="${file#$HANDBOOK/}"
+    local basename
+    basename=$(basename "$file")
 
-### RAG 交互笔记
-- [RAG 知识地图](/ai-handbook/rag/docs/rag-knowledge-map.html){target="_blank"}
-- [RAG 5D](/ai-handbook/rag/docs/rag-5d.html){target="_blank"}
-- [AI 知识中枢](/ai-handbook/rag/docs/ai-knowledge-hub.html){target="_blank"}
-- [课程路线图](/ai-handbook/rag/docs/00_课程路线图.html){target="_blank"}
-- [理解 RAG](/ai-handbook/rag/docs/01_理解RAG.html){target="_blank"}
-- [向量与检索](/ai-handbook/rag/docs/02_概念手册_向量与检索.html){target="_blank"}
-- [代码讲解 V1V2](/ai-handbook/rag/docs/03_代码讲解_V1V2.html){target="_blank"}
-- [工程方法论手册](/ai-handbook/rag/docs/04_工程方法论手册.html){target="_blank"}
+    # 提取所属目录（第一级）
+    local first_dir
+    first_dir=$(echo "$relpath" | cut -d'/' -f1)
 
-### AI Programming 交互笔记
-- [AI 编程总览](/ai-handbook/ai-programming/dist/ai-programming.html){target="_blank"}
-- [AI 案例集](/ai-handbook/ai-programming/dist/ai-cases.html){target="_blank"}
-- [AI 工具集](/ai-handbook/ai-programming/dist/ai-tools.html){target="_blank"}
-- [OMC 深度分析](/ai-handbook/ai-programming/dist/omc-deep-dive.html){target="_blank"}
-- [AI 修炼册](/ai-handbook/ai-programming/ai-xiulian-ce.html){target="_blank"}
-- [OMC 工程分析](/ai-handbook/ai-programming/omc-engineering.html){target="_blank"}
-- [OMC 分析](/ai-handbook/ai-programming/omc-analysis.html){target="_blank"}
-- [Skill 自动提取](/ai-handbook/ai-programming/skill-auto-extract.html){target="_blank"}
+    # 分组标题
+    local section_name=""
+    case "$first_dir" in
+      mcp)              section_name="MCP 交互笔记" ;;
+      agent)            section_name="Agent 交互笔记" ;;
+      agent-research)   section_name="Agent Research 交互笔记" ;;
+      rag)              section_name="RAG 交互笔记" ;;
+      ai-programming)   section_name="AI Programming 交互笔记" ;;
+      methodology)      section_name="方法论交互笔记" ;;
+      *)                section_name="其他交互笔记" ;;
+    esac
 
-### 方法论交互笔记
-- [学习方法论交互版](/ai-handbook/methodology/interactive.html){target="_blank"}
-EOF
+    # 输出分组标题（去重）
+    if [[ "$section_name" != "$current_section" ]]; then
+      echo "" >> "$INDEX"
+      echo "### $section_name" >> "$INDEX"
+      current_section="$section_name"
+    fi
+
+    # 提取标题
+    local title
+    title=$(extract_html_title "$file" "$basename")
+
+    # 链接到 wrapper md（去掉 .html 换成 .md）
+    local md_relpath="${relpath%.html}.md"
+    echo "- [$title]($md_relpath)" >> "$INDEX"
+
+  done < <(find "$HANDBOOK" \
+    -type f -name "*.html" \
+    -not \( -path '*/.venv/*' -o -path '*/node_modules/*' -o -path '*/src/*' \
+            -o -path '*/.git/*' \) \
+    -print0 | sort -z)
 }
 
 # ── 主入口 ──────────────────────────────────────────
