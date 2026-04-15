@@ -168,11 +168,11 @@ tags: $tags
 </style>
 
 <div class="html-embed-controls">
-<a href="/ai-handbook/$relpath" target="_blank">↗ 新窗口打开</a>
+<a href="https://bob798.github.io/ai-handbook/_html/$relpath" target="_blank">↗ 新窗口打开</a>
 <button onclick="this.closest('.html-embed-controls').nextElementSibling.classList.toggle('html-embed-fullscreen')">⛶ 全屏</button>
 </div>
 <div class="html-embed-container">
-<iframe src="/ai-handbook/$relpath" loading="lazy"></iframe>
+<iframe src="https://bob798.github.io/ai-handbook/_html/$relpath" loading="lazy"></iframe>
 </div>
 WRAPPER
     wrapper_count=$((wrapper_count + 1))
@@ -226,14 +226,15 @@ sync_markdown() {
 # ── 阶段 2: 复制 HTML ─────────────────────────────────
 
 sync_html() {
-  echo "==> [post-build] 复制 HTML → public/ai-handbook/"
+  local HTML_DEST="$PUBLIC_DEST/_html"
+  echo "==> [post-build] 复制 HTML → public/ai-handbook/_html/"
 
-  mkdir -p "$PUBLIC_DEST"
+  mkdir -p "$HTML_DEST"
 
   local html_count=0
   while IFS= read -r -d '' file; do
     local relpath="${file#$HANDBOOK/}"
-    local dest="$PUBLIC_DEST/$relpath"
+    local dest="$HTML_DEST/$relpath"
     mkdir -p "$(dirname "$dest")"
     cp "$file" "$dest"
     html_count=$((html_count + 1))

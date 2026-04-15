@@ -15,9 +15,9 @@ tags: ["ai-handbook", "ai-programming"]
 </style>
 
 <div class="html-embed-controls">
-<a href="/ai-handbook/ai-programming/dist/ai-programming.html" target="_blank">↗ 新窗口打开</a>
+<a href="https://bob798.github.io/ai-handbook/_html/ai-programming/dist/ai-programming.html" target="_blank">↗ 新窗口打开</a>
 <button onclick="this.closest('.html-embed-controls').nextElementSibling.classList.toggle('html-embed-fullscreen')">⛶ 全屏</button>
 </div>
 <div class="html-embed-container">
-<iframe src="/ai-handbook/ai-programming/dist/ai-programming.html" loading="lazy"></iframe>
+<iframe src="https://bob798.github.io/ai-handbook/_html/ai-programming/dist/ai-programming.html" loading="lazy"></iframe>
 </div>
