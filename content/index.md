@@ -8,10 +8,18 @@ title: Bob's Digital Garden
 
 ## 最新文章
 
-- [[posts/2026-04-14-speakeasy-ai-english-tutor|Speakeasy：用 AI 做你的英语私教]]
-- [[posts/2026-04-13-ai-handbook-learning-path|AI Handbook：从困惑到清晰的学习路径]]
-- [[posts/2026-04-12-claude-code-multi-agent-orchestration|Claude Code 多智能体编排实践]]
-- [[posts/2026-04-11-ai-job-matching-toolchain|AI 驱动的求职工具链]]
+- [[dev-tools/2026-05-12-ssh-key-rotation-and-server-deletion|SSH Key 轮换：本地换了新 key，服务器旧 key 怎么办？]]
+- [[spring-ai/2026-05-11-spring-ai-advisor-explained|Spring AI Advisor：LLM 调用链上的 AOP]]
+- [[dev-tools/2026-05-11-git-clone-ssh-https-debug|Git Clone 踩坑记：SSH 公钥认证失败到 HTTPS 证书报错的全流程排查]]
+- [[2026-05-05-民宿的下水道-照见了我思维里的一个洞|民宿的下水道，照见了我思维里的一个洞]]
+- [[claude-code/2026-04-15-omc-review-and-discussion-guide|OMC 实战指南：从场景出发，选对多智能体工作流]]
+
+## 系列文章
+
+- [[claude-code/|Claude Code 系列]] — 多智能体编排、OMC、AI 编程工作流
+- [[spring-ai/|Spring AI 系列]] — Java 工程师视角的 LLM 应用开发
+- [[dev-tools/|开发工具与工程实践]] — Git、SSH、博客自动化等日常工具
+- [[ai-projects/|AI 项目实践]] — 真实问题的 AI 项目复盘
 
 ## 知识库
 

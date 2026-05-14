@@ -41,3 +41,49 @@ blockquote {
 .tag-link {
   font-size: 0.8rem;
 }
+
+// ---- 左侧栏：可滚动 + 字体收紧 ----
+.sidebar.left {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lightgray) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--lightgray);
+    border-radius: 3px;
+  }
+}
+
+// 左栏标题缩小
+.sidebar.left .page-title {
+  font-size: 1.25rem;
+}
+
+// Explorer 标题与系列标题字号统一
+.sidebar .explorer .title-button h2 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+// RecentNotesFolder 放在 Explorer 之下作为附属节
+.sidebar.left {
+  .explorer + .recent-folder {
+    margin-top: 0.4rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid var(--lightgray);
+  }
+  .recent-folder details > summary .recent-folder-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}

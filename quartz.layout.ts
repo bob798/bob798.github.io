@@ -62,6 +62,17 @@ export const defaultContentPageLayout: PageLayout = {
   left: [
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
+    Component.DesktopOnly(
+      Component.Profile({
+        name: "Bob",
+        tagline: "后端工程师 → AI 应用工程师",
+        links: {
+          GitHub: "https://github.com/bob798",
+          Email: "mailto:xbb798@gmail.com",
+          RSS: "/index.xml",
+        },
+      }),
+    ),
     Component.Flex({
       components: [
         {
@@ -73,9 +84,27 @@ export const defaultContentPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer({
-      folderDefaultState: "open",
+      folderDefaultState: "collapsed",
       sortFn: explorerSortFn,
     }),
+    Component.DesktopOnly(
+      Component.RecentNotesFolder({
+        title: "最近更新",
+        limit: 5,
+        defaultOpen: true,
+        filter: (f) => {
+          const slug = f.slug ?? ""
+          // 排除：结构页（index/about）、folder index、ai-handbook 命名空间、archive 归档、草稿
+          if (slug === "index" || slug === "about") return false
+          if (slug.endsWith("/index")) return false
+          if (slug.startsWith("ai-handbook/")) return false
+          if (slug.startsWith("archive/")) return false
+          if (slug === "_unpublished-articles") return false
+          if (slug.startsWith("tags/")) return false
+          return true
+        },
+      }),
+    ),
   ],
   right: [
     Component.Graph(),
@@ -100,7 +129,7 @@ export const defaultListPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer({
-      folderDefaultState: "open",
+      folderDefaultState: "collapsed",
       sortFn: explorerSortFn,
     }),
   ],

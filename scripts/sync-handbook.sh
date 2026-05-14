@@ -249,10 +249,44 @@ sync_html() {
 
 # ── 生成索引页 ──────────────────────────────────────
 
+## 顶层 series 显示名映射 + 推荐顺序
+## 新增 series 不在映射里时，自动用目录名兜底，并附加在末尾
+series_display_name() {
+  case "$1" in
+    mcp)             echo "MCP · 模型上下文协议" ;;
+    agent)           echo "Agent · AI 智能体" ;;
+    agent-research)  echo "Agent Research · 生态拆解" ;;
+    rag)             echo "RAG · 检索增强生成" ;;
+    ai-programming)  echo "AI Programming · 编程实战" ;;
+    methodology)     echo "方法论" ;;
+    *)               echo "$1" ;;
+  esac
+}
+
+## 跳过非内容目录
+is_skipped_dir() {
+  case "$1" in
+    .git|.github|node_modules|.venv|.pytest_cache|.claude|.omc|.idea|.vscode|dist|build|src|skills|public|_handbook|__pycache__) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+## 提取 README 描述行（首段非空非标题行，截断 120 字）
+extract_readme_desc() {
+  local readme="$1"
+  [[ -f "$readme" ]] || { echo ""; return; }
+  awk '
+    /^---$/ { fm = !fm; next }
+    fm { next }
+    /^#/   { next }
+    /^>/   { sub(/^> */, ""); print; exit }
+    NF > 0 { print; exit }
+  ' "$readme" | cut -c1-120
+}
+
 generate_index() {
   local INDEX="$CONTENT_DEST/index.md"
 
-  # ── 静态部分: 知识地图 ──
   cat > "$INDEX" <<'HEADER'
 ---
 title: "AI Handbook · AI 工程师知识手册"
@@ -266,93 +300,119 @@ tags: ["ai-handbook"]
 
 ## 知识地图
 
-### MCP · 模型上下文协议
+HEADER
 
-- [MCP 基础：是什么、解决什么、为什么重要](mcp/01-foundations/README.md)
-- [三类能力：Tools / Resources / Prompts](mcp/02-core-concepts/tools-resources-prompts.md)
-- [Function Calling 前世今生](mcp/02-core-concepts/function-calling.md)
-- [Adapter & Gateway 实战架构](mcp/03-practical/adapter-gateway.md)
-- [MCP 面试题库](mcp/05-interview/qa.md)
-- [理解错的 10 件事](mcp/05-interview/common-misconceptions.md)
+  ## ── 动态生成: 知识地图 ────────────────────────────
+  ## 推荐顺序（学习路径），未列出的目录追加在末尾（按字母序）
+  local ORDER=(mcp agent agent-research rag ai-programming methodology)
+  local processed=()
 
-### Agent · AI 智能体
+  emit_series_section() {
+    local dirname="$1"
+    local src_dir="$HANDBOOK/$dirname"
+    [[ -d "$src_dir" ]] || return
 
-- [Agent Planning & Reasoning](agent/planning-reasoning-README.md)
+    local display
+    display=$(series_display_name "$dirname")
 
-### Agent Research · 生态拆解
+    echo "" >> "$INDEX"
+    echo "### $display" >> "$INDEX"
+    echo "" >> "$INDEX"
 
-- [ATDF 方法论](agent-research/methodology/ATDF.md)
-- [Agent 生态 2026](agent-research/research/agent-ecosystem-2026.md)
-- [OMC 拆解](agent-research/deep-dives/omc/omc-atdf.md)
-- [gstack 拆解](agent-research/deep-dives/gstack/gstack-atdf.md)
-- [从 RAG 到 Memory](agent-research/concepts/rag-to-memory.md)
-- [Karpathy 路线](agent-research/concepts/karpathy-route.md)
+    # README 描述行（若存在）
+    local desc
+    desc=$(extract_readme_desc "$src_dir/README.md")
+    if [[ -n "$desc" ]]; then
+      echo "$desc" >> "$INDEX"
+      echo "" >> "$INDEX"
+    fi
 
-### RAG · 检索增强生成
+    # 系列入口：优先 README.md，没有就给目录链接
+    if [[ -f "$src_dir/README.md" ]]; then
+      echo "- [系列概览 →]($dirname/README.md)" >> "$INDEX"
+    else
+      echo "- [系列目录 →]($dirname/)" >> "$INDEX"
+    fi
 
-- [RAG 概览](rag/README.md)
-- [企业级应用参考及 RAG 生态](rag/docs/企业级应用参考及rag生态.md)
+    # 列出最多 6 个代表性 md（深度 ≤ 2，跳过 README）
+    local count=0
+    while IFS= read -r -d '' file; do
+      [[ $count -ge 6 ]] && break
+      local relpath="${file#$HANDBOOK/}"
+      local basename
+      basename=$(basename "$file")
+      case "$basename" in
+        README.md|CLAUDE.md|PLAN.md|SKILL.md|index.md) continue ;;
+      esac
+      local title
+      title=$(extract_title "$file" "$basename")
+      echo "- [$title]($relpath)" >> "$INDEX"
+      count=$((count + 1))
+    done < <(find "$src_dir" -maxdepth 2 -type f -name "*.md" -print0 2>/dev/null | sort -z)
+  }
 
-### AI Programming · 编程实战
+  # 1. 按推荐顺序输出已知 series
+  for dirname in "${ORDER[@]}"; do
+    [[ -d "$HANDBOOK/$dirname" ]] || continue
+    emit_series_section "$dirname"
+    processed+=("$dirname")
+  done
 
-- [OMC PM Audio 案例](ai-programming/cases/omc-pm-audio-cs.md)
+  # 2. 扫描剩余 top-level 目录（未在 ORDER 里的新 series）
+  for path in "$HANDBOOK"/*/; do
+    local dirname
+    dirname=$(basename "$path")
+    is_skipped_dir "$dirname" && continue
+    # 已处理过？
+    local already=0
+    for p in "${processed[@]}"; do [[ "$p" == "$dirname" ]] && already=1; done
+    [[ $already -eq 1 ]] && continue
+    emit_series_section "$dirname"
+  done
 
-### 方法论
+  ## ── 动态生成: 交互式笔记列表 ────────────────────────
+  ## 只在有 html 文件时输出该 section
+  local html_count
+  html_count=$(find "$HANDBOOK" -type f -name "*.html" \
+    -not \( -path '*/.venv/*' -o -path '*/node_modules/*' -o -path '*/src/*' \
+            -o -path '*/.git/*' \) 2>/dev/null | wc -l | tr -d ' ')
 
-- [学习方法论](methodology/README.md)
+  if [[ "$html_count" -gt 0 ]]; then
+    cat >> "$INDEX" <<'INTERACTIVE'
 
 ---
 
 ## 交互式笔记
 
 > 嵌入式交互页面，可在博客内直接查看，也可新窗口打开。
+INTERACTIVE
 
-HEADER
+    local current_section=""
+    while IFS= read -r -d '' file; do
+      local relpath="${file#$HANDBOOK/}"
+      local basename
+      basename=$(basename "$file")
+      local first_dir
+      first_dir=$(echo "$relpath" | cut -d'/' -f1)
+      local section_name
+      section_name="$(series_display_name "$first_dir") · 交互笔记"
 
-  # ── 动态部分: 自动扫描 HTML 生成交互笔记列表 ──
-  # 目录名 → 显示名映射
-  local current_section=""
-  while IFS= read -r -d '' file; do
-    local relpath="${file#$HANDBOOK/}"
-    local basename
-    basename=$(basename "$file")
+      if [[ "$section_name" != "$current_section" ]]; then
+        echo "" >> "$INDEX"
+        echo "### $section_name" >> "$INDEX"
+        current_section="$section_name"
+      fi
 
-    # 提取所属目录（第一级）
-    local first_dir
-    first_dir=$(echo "$relpath" | cut -d'/' -f1)
-
-    # 分组标题
-    local section_name=""
-    case "$first_dir" in
-      mcp)              section_name="MCP 交互笔记" ;;
-      agent)            section_name="Agent 交互笔记" ;;
-      agent-research)   section_name="Agent Research 交互笔记" ;;
-      rag)              section_name="RAG 交互笔记" ;;
-      ai-programming)   section_name="AI Programming 交互笔记" ;;
-      methodology)      section_name="方法论交互笔记" ;;
-      *)                section_name="其他交互笔记" ;;
-    esac
-
-    # 输出分组标题（去重）
-    if [[ "$section_name" != "$current_section" ]]; then
-      echo "" >> "$INDEX"
-      echo "### $section_name" >> "$INDEX"
-      current_section="$section_name"
-    fi
-
-    # 提取标题
-    local title
-    title=$(extract_html_title "$file" "$basename")
-
-    # 链接到 wrapper md（去掉 .html 换成 .md）
-    local md_relpath="${relpath%.html}.md"
-    echo "- [$title]($md_relpath)" >> "$INDEX"
-
-  done < <(find "$HANDBOOK" \
-    -type f -name "*.html" \
-    -not \( -path '*/.venv/*' -o -path '*/node_modules/*' -o -path '*/src/*' \
-            -o -path '*/.git/*' \) \
-    -print0 | sort -z)
+      local title
+      title=$(extract_html_title "$file" "$basename")
+      local md_relpath="${relpath%.html}.md"
+      echo "- [$title]($md_relpath)" >> "$INDEX"
+    done < <(find "$HANDBOOK" \
+      -type f -name "*.html" \
+      -not \( -path '*/.venv/*' -o -path '*/node_modules/*' -o -path '*/src/*' \
+              -o -path '*/.git/*' \) \
+      -print0 | sort -z)
+  fi
 }
 
 # ── 主入口 ──────────────────────────────────────────
